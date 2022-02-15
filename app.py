@@ -11,7 +11,6 @@ from flask import Flask, jsonify
 #set up base
 Base = declarative_base()
 
-
 #create class for measurement table
 class Measurement(Base):
     __tablename__ = "measurement"
@@ -64,9 +63,9 @@ def main():
 def precip():
 
     recent_prcp = session.query(str(Measurement.date), Measurement.prcp)\
-    .filter(Measurement.date > '2016-08-22')\
-    .filter(Measurement.date <= '2017-08-23')\
-    .order_by(Measurement.date).all()
+    .filter(str(Measurement.date) > '2016-08-22')\
+    .filter(str(Measurement.date) <= '2017-08-23')\
+    .order_by(str(Measurement.date)).all()
 
     # convert results to a dictionary with date as key and prcp as value
     prcp_dict = dict(recent_prcp)
@@ -93,10 +92,10 @@ def stations():
 def tobs():
 
     tobs_station = session.query(str(Measurement.date), Measurement.tobs)\
-    .filter(Measurement.date > '2016-08-23')\
-    .filter(Measurement.date <= '2017-08-23')\
-    .filter(Measurement.station == "USC00519281")\
-    .order_by(Measurement.date).all()
+    .filter(str(Measurement.date) > '2016-08-23')\
+    .filter(str(Measurement.date) <= '2017-08-23')\
+    .filter(str(Measurement.station) == "USC00519281")\
+    .order_by(str(Measurement.date)).all()
 
     # convert results to dict
     tobs_dict = dict(tobs_station)
