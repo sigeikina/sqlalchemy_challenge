@@ -59,19 +59,32 @@ def main():
 
 
 # create precipitation route of last 12 months of precipitation data
+#@app.route("/api/v1.0/precipitation")
+#def precip():
+
+    #recent_prcp = session.query(str(Measurement.date), Measurement.prcp)\
+    #.filter(str(Measurement.date) > '2016-08-22')\
+    #.filter(str(Measurement.date) <= '2017-08-23')\
+    #.order_by(str(Measurement.date)).all()
+
+import datetime as dt
+
 @app.route("/api/v1.0/precipitation")
 def precip():
+    prev_year = dt.date(2016, 8, 22) 
+    current_year = dt.date(2017, 8, 23) 
+    recent_prcp = session.query(Measurement.date, Measurement.prcp).\
+        filter(Measurement.date >= prev_year).\
+        filter(Measurement.date < current_year).all()
 
-    recent_prcp = session.query(str(Measurement.date), Measurement.prcp)\
-    .filter(str(Measurement.date) > '2016-08-22')\
-    .filter(str(Measurement.date) <= '2017-08-23')\
-    .order_by(str(Measurement.date)).all()
+    precip = {str(date): prcp for date, prcp in recent_prcp}
+    return jsonify(precip)
 
     # convert results to a dictionary with date as key and prcp as value
-    prcp_dict = dict(recent_prcp)
+   # prcp_dict = dict(recent_prcp)
 
     # return json list of dictionary
-    return jsonify(prcp_dict)
+    #return jsonify(prcp_dict)
 
 
 # create station route of a list of the stations in the dataset
@@ -88,21 +101,32 @@ def stations():
 
 
 # create tobs route of temp observations for most active station over last 12 months
-@app.route("/api/v1.0/tobs")
-def tobs():
+#@app.route("/api/v1.0/tobs")
+#def tobs():
 
-    tobs_station = session.query(str(Measurement.date), Measurement.tobs)\
-    .filter(str(Measurement.date) > '2016-08-23')\
-    .filter(str(Measurement.date) <= '2017-08-23')\
-    .filter(str(Measurement.station) == "USC00519281")\
-    .order_by(str(Measurement.date)).all()
+    #tobs_station = session.query(str(Measurement.date), Measurement.tobs)\
+    #.filter(str(Measurement.date) > '2016-08-23')\
+    #.filter(str(Measurement.date) <= '2017-08-23')\
+    #.filter(str(Measurement.station) == "USC00519281")\
+    #.order_by(str(Measurement.date)).all()
 
     # convert results to dict
-    tobs_dict = dict(tobs_station)
+    #tobs_dict = dict(tobs_station)
 
     # return json list of dict
-    return jsonify(tobs_dict)
+    #return jsonify(tobs_dict)
 
+
+@app.route("/api/v1.0/tobs")
+def tobs():
+    prev_year = dt.date(2016, 8, 22) 
+    current_year = dt.date(2017, 8, 23) 
+    recent_prcp = session.query(Measurement.date, Measurement.prcp).\
+        filter(Measurement.date >= prev_year).\
+        filter(Measurement.date < current_year).all()
+
+    precip = {str(date): prcp for date, prcp in recent_prcp}
+    return jsonify(precip)
 
 # create start and start/end route
 # min, average, and max temps for a given date range
